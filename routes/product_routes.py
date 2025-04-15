@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, render_template, request
 
 from services.product_service import (
     add_product_service,
@@ -20,8 +20,8 @@ def add_product():
 
 @product_routes.route("/", methods=["GET"])
 def get_products():
-    page = int(request.args.get("page", 1))
-    per_page = int(request.args.get("per_page", 10))
+    page = int(request.args.get("page", 1))  # Default page is 1
+    per_page = int(request.args.get("per_page", 10))  # Default page size is 10
     return get_products_service(page, per_page)
 
 
@@ -46,3 +46,13 @@ def search_products():
     name = request.args.get("name")
     category = request.args.get("category")
     return search_products_service(name, category)
+
+
+@product_routes.route("/add")
+def add_product_page():
+    return render_template("add_product.html")
+
+
+@product_routes.route("/update/<int:product_id>")
+def update_product_page(product_id):
+    return render_template("update_product.html", product_id=product_id)
